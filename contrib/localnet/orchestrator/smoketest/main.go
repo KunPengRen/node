@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math/big"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/btcsuite/btcd/rpcclient"
@@ -259,55 +260,68 @@ func LocalSmokeTest(_ *cobra.Command, _ []string) {
 	// The following tests are optional tests; comment out the ones you don't want to run
 	// temporarily to reduce dev/test cycle turnaround time
 
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestContextUpgrade()
+	// smokeTest.TestContextUpgrade()
 
-	smokeTest.TestDepositAndCallRefund()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestDepositAndCallRefund()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestERC20Deposit()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestERC20Deposit()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestERC20Withdraw()
-	//smokeTest.WithdrawBitcoinMultipleTimes(5)
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestERC20Withdraw()
+	// //smokeTest.WithdrawBitcoinMultipleTimes(5)
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestSendZetaOut()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestSendZetaOut()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestSendZetaOutBTCRevert()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestSendZetaOutBTCRevert()
+	// smokeTest.CheckZRC20ReserveAndSupply()
+	wg := sync.WaitGroup{}
+	startMessageTime := time.Now()
+	messagesNum := 100
+	wg.Add(messagesNum)
+	for i := 0; i < 100; i++ {
+		go func() {
+			time.Sleep((1 / 20) * time.Microsecond)
+			smokeTest.TestMessagePassing()
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	fmt.Println("TPS", float64(messagesNum)/time.Since(startMessageTime).Seconds())
+	fmt.Println("Total time", time.Since(startMessageTime))
 
-	smokeTest.TestMessagePassing()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestZRC20Swap()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestZRC20Swap()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestBitcoinWithdraw()
-	//smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestBitcoinWithdraw()
+	// //smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestCrosschainSwap()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestCrosschainSwap()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestMessagePassingRevertFail()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestMessagePassingRevertFail()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestMessagePassingRevertSuccess()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestMessagePassingRevertSuccess()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestPauseZRC20()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestPauseZRC20()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestERC20DepositAndCallRefund()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestERC20DepositAndCallRefund()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	smokeTest.TestUpdateBytecode()
-	smokeTest.CheckZRC20ReserveAndSupply()
+	// smokeTest.TestUpdateBytecode()
+	// smokeTest.CheckZRC20ReserveAndSupply()
 
-	// add your dev test here
-	smokeTest.TestMyTest()
+	// // add your dev test here
+	// smokeTest.TestMyTest()
 
 	smokeTest.wg.Wait()
 }

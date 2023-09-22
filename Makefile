@@ -197,6 +197,14 @@ start-smoketest:
 	@echo "--> Starting smoketest"
 	cd contrib/localnet/ && $(DOCKER) compose up -d
 
+start-smoketest-4nodes:
+	@echo "--> Starting smoketest-4nodes"
+	cd contrib/localnet/ && $(DOCKER) compose -f docker-compose-4nodes.yml up -d
+
+stop-smoketest-4nodes:
+	@echo "--> Stopping smoketest"
+	cd contrib/localnet/ && $(DOCKER) compose -f docker-compose-4nodes.yml  down --remove-orphans
+	
 start-smoketest-upgrade:
 	@echo "--> Starting smoketest with upgrade proposal"
 	cd contrib/localnet/ && $(DOCKER) compose -f docker-compose-upgrade.yml up -d
